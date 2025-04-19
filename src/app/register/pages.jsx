@@ -2,24 +2,25 @@ import { account } from '@/lib/appwrite';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
+      await account.create('unique()', email, password);
       await account.createEmailPasswordSession(email, password);
       router.push('/dashboard');
     } catch (err) {
       console.error(err);
-      alert('Login failed');
+      alert('Registration failed');
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleRegister}>
       <input
         type='email'
         value={email}
@@ -34,7 +35,7 @@ export default function Login() {
         placeholder='Password'
         required
       />
-      <button type='submit'>Log In</button>
+      <button type='submit'>Sign Up</button>
     </form>
   );
 }
