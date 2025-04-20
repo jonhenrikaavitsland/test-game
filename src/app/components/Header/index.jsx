@@ -1,4 +1,4 @@
-import LoginBox from '../LoginBox';
+import Auth from '../Auth';
 
 export default function Header() {
   return (
@@ -6,7 +6,7 @@ export default function Header() {
       <div className='text-center font-bold text-4xl'>
         Test Game
       </div>
-      <LoginBox />
+      <Auth />
     </header>
   );
 }
