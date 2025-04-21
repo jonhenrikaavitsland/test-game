@@ -16,7 +16,7 @@ export default function RegisterForm() {
     setError(null);
     try {
       await register(email, password, username);
-      router.push('/login');
+      router.push('/');
     } catch (err) {
       setError(err.message);
     }

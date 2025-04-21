@@ -84,6 +84,8 @@ export function AuthProvider({ children }) {
     await account.createEmailPasswordSession(email, password);
     // Then create the document as the newly‑authenticated user:
     await createPlayerDoc(res.$id, username);
+    // 3) Fetch the new user and their player document
+    await fetchUser();
     return res;
   };
 
