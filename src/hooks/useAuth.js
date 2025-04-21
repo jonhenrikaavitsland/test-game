@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
       process.env.NEXT_PUBLIC_APPWRITE_PLAYERS_COLLECTION_ID,
       userId, // document ID matches user ID
-      { userId: username, xp: 0, gold: 0, level: 1 },
+      { username: username, xp: 0, gold: 0, level: 1 },
       [
         Permission.read(Role.user(userId)),
         Permission.write(Role.user(userId)),
