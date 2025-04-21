@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
       userId, // document ID matches user ID
       { username: username, xp: 0, gold: 0, level: 1 },
       [
-        Permission.read(Role.any()),
+        Permission.read(Role.user(userId)),
         Permission.write(Role.user(userId)),
       ]
     );
@@ -80,7 +80,9 @@ export function AuthProvider({ children }) {
       password,
       username
     );
-    // create associated player document
+    // Now log in so we have a session:
+    await account.createEmailPasswordSession(email, password);
+    // Then create the document as the newly‑authenticated user:
     await createPlayerDoc(res.$id, username);
     return res;
   };
