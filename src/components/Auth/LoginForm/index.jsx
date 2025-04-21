@@ -1,19 +1,20 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { account } from '../../../lib/appwrite';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const router = useRouter();
+  const { login } = useAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     try {
-      await account.createEmailSession(email, password);
+      await login(email, password);
       router.push('/');
     } catch (err) {
       setError(err.message);

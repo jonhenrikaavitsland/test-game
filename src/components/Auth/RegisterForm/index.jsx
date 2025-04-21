@@ -1,19 +1,21 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { account, ID } from '../../../lib/appwrite';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState(null);
   const router = useRouter();
+  const { register } = useAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     try {
-      await account.create(ID.unique(), email, password);
+      await register(email, password, username);
       router.push('/login');
     } catch (err) {
       setError(err.message);
@@ -27,6 +29,14 @@ export default function RegisterForm() {
     >
       <h1 className='text-2xl'>Register</h1>
       {error && <p className='text-red-500'>{error}</p>}
+      <input
+        type='text'
+        placeholder='Username'
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+        className='w-full border px-3 py-2 rounded'
+      />
       <input
         type='email'
         placeholder='Email'

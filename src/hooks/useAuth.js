@@ -5,27 +5,56 @@ import {
   createContext,
   useContext,
 } from 'react';
-import { account } from '../lib/appwrite';
+import { account, ID } from '@/lib/appwrite';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch session user
+  const fetchUser = async () => {
+    try {
+      const res = await account.get();
+      setUser(res);
+    } catch (err) {
+      if (err.code && err.code !== 401)
+        console.error('Auth fetch error:', err);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    account.get().then(
-      (res) => setUser(res),
-      () => setUser(null)
-    );
+    fetchUser();
   }, []);
 
+  const login = async (email, password) => {
+    await account.createEmailPasswordSession(email, password);
+    await fetchUser();
+  };
+
+  const register = async (email, password, name) => {
+    await account.create(ID.unique(), email, password, name);
+    // Optionally auto-login or simply return
+  };
+
   const logout = async () => {
-    await account.deleteSession('current');
-    setUser(null);
+    try {
+      await account.deleteSession('current');
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      setUser(null);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
