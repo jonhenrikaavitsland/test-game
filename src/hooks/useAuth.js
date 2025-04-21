@@ -4,8 +4,15 @@ import {
   useEffect,
   createContext,
   useContext,
+  useCallback,
 } from 'react';
-import { account, databases, ID } from '@/lib/appwrite';
+import {
+  account,
+  databases,
+  ID,
+  Permission,
+  Role,
+} from '@/lib/appwrite';
 
 const AuthContext = createContext(null);
 
@@ -19,7 +26,11 @@ export function AuthProvider({ children }) {
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
       process.env.NEXT_PUBLIC_APPWRITE_PLAYERS_COLLECTION_ID,
       userId, // document ID matches user ID
-      { userId: username, xp: 0, gold: 0, level: 1 }
+      { userId: username, xp: 0, gold: 0, level: 1 },
+      [
+        Permission.read(Role.user(userId)),
+        Permission.write(Role.user(userId)),
+      ]
     );
   };
 
@@ -38,7 +49,7 @@ export function AuthProvider({ children }) {
   };
 
   // Fetch session user
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     try {
       const res = await account.get();
       setUser(res);
@@ -51,11 +62,11 @@ export function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [fetchUser]);
 
   const login = async (email, password) => {
     await account.createEmailPasswordSession(email, password);
