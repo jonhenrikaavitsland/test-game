@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
       userId, // document ID matches user ID
       { username: username, xp: 0, gold: 0, level: 1 },
       [
-        Permission.read(Role.user(userId)),
+        Permission.read(Role.any()),
         Permission.write(Role.user(userId)),
       ]
     );
