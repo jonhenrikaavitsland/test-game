@@ -1,15 +1,10 @@
-import Footer from './components/Footer';
-import Header from './components/Header';
-import './globals.css';
+import { AuthProvider } from '../hooks/useAuth';
+import RootLayout from '../components/layout/RootLayout';
 
-export default function RootLayout({ children }) {
+export default function AppLayout({ children }) {
   return (
-    <html lang='en'>
-      <body className='flex flex-col min-h-screen'>
-        <Header />
-        <main className='grow'>{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <AuthProvider>
+      <RootLayout>{children}</RootLayout>
+    </AuthProvider>
   );
 }
