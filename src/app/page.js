@@ -1,5 +1,6 @@
 'use client';
 
+import Quest from '@/components/Quest';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -19,13 +20,17 @@ export default function HomePage() {
   if (!user) return null; // avoid rendering when user is null
 
   return (
-    <div className='text-center mt-20'>
-      <h1 className='text-3xl font-bold'>
-        Ahoy, {user.name || user.email}!
-      </h1>
-      <p className='mt-4'>
-        Welcome to Pirate Quest. Your adventure awaits.
-      </p>
-    </div>
+    <>
+      <div className='text-center mt-20'>
+        <h1 className='text-3xl font-bold'>
+          Ahoy, {user.name || user.email}!
+        </h1>
+        <p className='mt-4'>
+          Welcome to Pirate Quest. Your adventure awaits.
+        </p>
+      </div>
+
+      <Quest />
+    </>
   );
 }

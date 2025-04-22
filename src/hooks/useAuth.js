@@ -100,9 +100,38 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // inside AuthProvider, after logout…
+  const completeQuest = async (xpGain, goldGain) => {
+    if (!user) throw new Error('Not authenticated');
+
+    // calculate new totals
+    const newXp = (player?.xp ?? 0) + xpGain;
+    const newGold = (player?.gold ?? 0) + goldGain;
+
+    // push update to Appwrite
+    const updated = await databases.updateDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+      process.env.NEXT_PUBLIC_APPWRITE_PLAYERS_COLLECTION_ID,
+      user.$id,
+      { xp: newXp, gold: newGold }
+    );
+
+    // update local state
+    setPlayer(updated);
+    return updated;
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, player, loading, login, register, logout }}
+      value={{
+        user,
+        player,
+        loading,
+        login,
+        register,
+        logout,
+        completeQuest,
+      }}
     >
       {children}
     </AuthContext.Provider>
