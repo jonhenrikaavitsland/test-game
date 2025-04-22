@@ -7,9 +7,10 @@ export default function GameUI({ children }) {
 
   return (
     <div className='game-ui-container p-4'>
-      <div className='hud mb-4'>
+      <div className='hud flex gap-4 mb-4'>
+        <span>Level: {player?.level ?? 0}</span>
         <span>XP: {player?.xp ?? 0}</span>
-        <span className='ml-4'>Gold: {player?.gold ?? 0}</span>
+        <span>Gold: {player?.gold ?? 0}</span>
       </div>
       {children}
     </div>
